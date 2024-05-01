@@ -47,8 +47,6 @@ function App() {
     }));
   };
 
-  // Function to handle scrolling
-
   useEffect(() => {
     setFilteredJobs(
       jobs.map((item) =>
@@ -60,7 +58,9 @@ function App() {
             job?.location
               .toLowerCase()
               .includes(filters.location.toLowerCase()) &&
-            (filters.jobType === "" || job.jobType === filters.jobType)
+            job?.jobRole.toLowerCase().includes(filters.jobType.toLowerCase())
+
+          // (filters.jobType === "" || job?.jobRole === filters.jobType)
         )
       )
     );
@@ -76,7 +76,7 @@ function App() {
       <div className="filters">
         <input
           type="text"
-          placeholder="Keyword"
+          placeholder="Tech Stack"
           value={filters.keyword}
           onChange={(e) => handleFilterChange("keyword", e.target.value)}
         />
@@ -91,10 +91,11 @@ function App() {
           onChange={(e) => handleFilterChange("jobType", e.target.value)}
         >
           <option value="">All</option>
-          <option value="full-time">Full-time</option>
-          <option value="part-time">Part-time</option>
-          <option value="contract">Contract</option>
-          <option value="freelance">Freelance</option>
+          <option value="Tech Lead">Tech Lead</option>
+          <option value="Frontend">Frontend</option>
+          <option value="Ios">Ios</option>
+          <option value="Backend">Backend</option>
+          <option value="Android">Android</option>
         </select>
       </div>
       <div className="jobListings">
