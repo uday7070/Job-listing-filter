@@ -10,14 +10,9 @@ function App() {
     location: "",
     jobType: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const pageSize = 10; // Number of jobs per page
 
   // Function to fetch jobs from the server
   const fetchJobs = async () => {
-    setLoading(true);
-
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -38,15 +33,14 @@ function App() {
       .then((response) => response.text())
       .then((result) => {
         const myObj = JSON.parse(result);
-        setJobs((prevJobs) => [...prevJobs, myObj.jdList]);
-        setLoading(false);
+        setJobs(() => [myObj.jdList]);
       })
       .catch((error) => console.error(error));
   };
 
   // Function to handle filtering of jobs
   const handleFilterChange = (filterName, value) => {
-    setPage(1); // Reset page when filters change
+    // Reset page when filters change
     setFilters((prevFilters) => ({
       ...prevFilters,
       [filterName]: value,
@@ -54,21 +48,27 @@ function App() {
   };
 
   // Function to handle scrolling
-  const handleScroll = () => {
-    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-    if (scrollTop + clientHeight >= scrollHeight - 20 && !loading) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  };
+
+  useEffect(() => {
+    setFilteredJobs(
+      jobs.map((item) =>
+        item.filter(
+          (job) =>
+            job?.jobRole
+              .toLowerCase()
+              .includes(filters.keyword.toLowerCase()) &&
+            job?.location
+              .toLowerCase()
+              .includes(filters.location.toLowerCase()) &&
+            (filters.jobType === "" || job.jobType === filters.jobType)
+        )
+      )
+    );
+  }, [jobs, filters]);
 
   useEffect(() => {
     fetchJobs();
-  }, [page, filters]);
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [loading]);
+  }, [filters]);
 
   return (
     <div className="container">
@@ -98,11 +98,17 @@ function App() {
         </select>
       </div>
       <div className="jobListings">
-        {filteredJobs.map((job) => (
-          <JobListing key={job.id} job={job.jobDetailsFromCompany} />
+        {filteredJobs[0]?.map((job) => (
+          <div key={job.jdUid}>
+            <JobListing
+              key={job.id}
+              jobRole={job.jobRole}
+              jobDetails={job.jobDetailsFromCompany}
+              jobLocation={job.location}
+            />
+          </div>
         ))}
       </div>
-      {loading && <div className="loading">Loading...</div>}
     </div>
   );
 }
