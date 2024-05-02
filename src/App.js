@@ -6,9 +6,10 @@ function App() {
   const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [filters, setFilters] = useState({
-    keyword: "",
     location: "",
     jobType: "",
+    minExperience: "",
+    minSalary: "",
   });
 
   // Function to fetch jobs from the server
@@ -52,13 +53,16 @@ function App() {
       jobs.map((item) =>
         item.filter(
           (job) =>
-            job?.jobRole
-              .toLowerCase()
-              .includes(filters.keyword.toLowerCase()) &&
             job?.location
               .toLowerCase()
               .includes(filters.location.toLowerCase()) &&
-            job?.jobRole.toLowerCase().includes(filters.jobType.toLowerCase())
+            job?.jobRole
+              .toLowerCase()
+              .includes(filters.jobType.toLowerCase()) &&
+            (filters.minExperience === "" ||
+              parseInt(job.minExp) >= parseInt(filters.minExperience)) &&
+            (filters.minSalary === "" ||
+              parseInt(job.minJdSalary) >= parseInt(filters.minSalary))
 
           // (filters.jobType === "" || job?.jobRole === filters.jobType)
         )
@@ -76,17 +80,12 @@ function App() {
       <div className="filters">
         <input
           type="text"
-          placeholder="Tech Stack"
-          value={filters.keyword}
-          onChange={(e) => handleFilterChange("keyword", e.target.value)}
-        />
-        <input
-          type="text"
           placeholder="Location"
           value={filters.location}
           onChange={(e) => handleFilterChange("location", e.target.value)}
         />
         <select
+          style={{ color: "gray" }}
           value={filters.jobType}
           onChange={(e) => handleFilterChange("jobType", e.target.value)}
         >
@@ -97,6 +96,20 @@ function App() {
           <option value="Backend">Backend</option>
           <option value="Android">Android</option>
         </select>
+        <input
+          type="number"
+          placeholder="Minimum Experience"
+          value={filters.minExperience}
+          onChange={(e) => handleFilterChange("minExperience", e.target.value)}
+          className="minExperienceInput"
+        />
+        <input
+          type="number"
+          placeholder="Minimum salary"
+          value={filters.minSalary}
+          onChange={(e) => handleFilterChange("minSalary", e.target.value)}
+          className="minExperienceInput"
+        />
       </div>
       <div className="jobListings">
         {filteredJobs[0]?.map((job) => (
@@ -106,6 +119,10 @@ function App() {
               jobRole={job.jobRole}
               jobDetails={job.jobDetailsFromCompany}
               jobLocation={job.location}
+              maxSalary={job.maxJdSalary}
+              minSalary={job.minJdSalary}
+              minExp={job.minExp}
+              maxExp={job.maxExp}
             />
           </div>
         ))}

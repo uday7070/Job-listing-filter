@@ -85,10 +85,16 @@
   justify-content: center;
   margin-top: 5px;
 }
+.minExperienceInput {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 .boltIcon {
   color: rgb(244, 244, 37);
 }
-@media only screen and (max-width: 575px) {
+@media only screen and (max-width: 675px) {
   .filters {
     gap: 2px;
     flex-direction: column;
