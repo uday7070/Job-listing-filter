@@ -63,8 +63,6 @@ function App() {
               parseInt(job.minExp) >= parseInt(filters.minExperience)) &&
             (filters.minSalary === "" ||
               parseInt(job.minJdSalary) >= parseInt(filters.minSalary))
-
-          // (filters.jobType === "" || job?.jobRole === filters.jobType)
         )
       )
     );
