@@ -41,7 +41,6 @@ function App() {
 
   // Function to handle filtering of jobs
   const handleFilterChange = (filterName, value) => {
-    // Reset page when filters change
     setFilters((prevFilters) => ({
       ...prevFilters,
       [filterName]: value,
