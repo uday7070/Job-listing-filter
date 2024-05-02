@@ -18,7 +18,7 @@ const JobListing = (props) => {
         </div>
         <CheckIcon className="check_button" />
       </div>
-      {console.log(props.minExp)}
+
       <div>
         Experience {props.minExp == null ? 0 : props.minExp} -{" "}
         {props.maxExp == null ? 0 : props.maxExp} Year
